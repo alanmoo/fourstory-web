@@ -1,5 +1,5 @@
 class checkin{
-	constructor(foo){
-		this.foo = foo;
+	constructor(FourSquareAPICheckin){
+		this.foo = "bar"		
 	}
 }
