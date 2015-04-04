@@ -31,8 +31,8 @@ gulp.task('babel', function(){
 });
 
 gulp.task('html', function(){
-	return gulp.src('src/*')
-	.pipe(watch('src/*'))
+	return gulp.src('src/**/*.html')
+	.pipe(watch('src/**/*.html'))
 	.pipe(gulp.dest('dist'));
 })
 
