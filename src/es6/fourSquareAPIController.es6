@@ -46,6 +46,8 @@ class FSApiController{
 		request.onsuccess = function(event) {
 			console.log("db successfully opened");
 			this.db = event.target.result;
+			//Ok the DB is opened and data is added to it (because this gets called after onupgradeneeded is successful)
+			//So let's try and pull checkins in a fixed time range out of the IndexedDB.
 			var dateRange = IDBKeyRange.bound(1428525636, 1428705636, true, true);
 			var objectStore = this.db.transaction("checkins").objectStore("checkins");
 			var index = objectStore.index("createdAt");
@@ -56,6 +58,9 @@ class FSApiController{
 				cursor.continue();
 				}
 			}
+			//This works, so some things next up: Fetch all of the user's data, bind the date range searching to a UI element
+
+
 			// var index = this.db.objectStore.index("createdAt")
 			// this.db.transaction("checkins","readonly").objectStore("checkins").get("55288597498ead4043c9ef40").onsuccess = (event)=>{
 				// console.log(event.target.result);
