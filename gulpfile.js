@@ -37,4 +37,15 @@ gulp.task('html', function(){
 })
 
 gulp.task('default', ['watch','webserver']);
-gulp.task('watch',['sass','babel','html'])
+gulp.task('watch',['sass','babel','html']);
+gulp.task('build', function(){
+	gulp.src('src/sass/*.scss').pipe(sass())
+    .pipe(gulp.dest('dist/css'));
+    gulp.src('src/es6/*.es6').pipe(babel())
+	.pipe(rename({
+		extname: ".js"
+	}))
+	.pipe(gulp.dest('dist/js'));
+	gulp.src('src/**/*.html')
+	.pipe(gulp.dest('dist'));
+});
