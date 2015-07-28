@@ -21,8 +21,8 @@ gulp.task('sass', function() {
 });
 
 gulp.task('babel', function(){
-	return gulp.src('src/es6/*.es6')
-	.pipe(watch('src/es6/*.es6'))
+	return gulp.src('src/js/*.js')
+	.pipe(watch('src/js/*.js'))
 	.pipe(babel())
 	.pipe(rename({
 		extname: ".js"
@@ -41,7 +41,7 @@ gulp.task('watch',['sass','babel','html']);
 gulp.task('build', function(){
 	gulp.src('src/sass/*.scss').pipe(sass())
     .pipe(gulp.dest('dist/css'));
-    gulp.src('src/es6/*.es6').pipe(babel())
+    gulp.src('src/js/*.js').pipe(babel())
 	.pipe(rename({
 		extname: ".js"
 	}))
