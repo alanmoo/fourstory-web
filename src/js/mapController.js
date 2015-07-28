@@ -20,11 +20,13 @@ class fourStoryMap{
 		}
 
 		this.checkins.forEach((checkin)=>{
+			if(checkin.venue){
 			const checkincoords = [checkin.venue.location.lat, checkin.venue.location.lng];
 			//Not sure I need to worry about amount of markers on the map. Will test for performance when I have more data.
 			// if(this.map.getBounds().contains(checkincoords)){
 				L.marker(checkincoords).bindPopup(`${checkin.venue.name} ${new Date(checkin.createdAt*1000)}`).addTo(this.map);
 			// }
+			}
 		});
 	}
 	

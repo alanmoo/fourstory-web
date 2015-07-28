@@ -20,8 +20,8 @@ class FSApiController{
 
 	_fetchNext250(offset, searchBeginTime, resolve, reject){
 		const xhr = new XMLHttpRequest();
-		console.log(`searchBegin: ${searchBeginTime}`);
-		console.log(searchBeginTime.constructor);
+		// console.log(`searchBegin: ${searchBeginTime}`);
+		// console.log(searchBeginTime.constructor);
 		const url = `https://api.foursquare.com/v2/users/self/checkins?oauth_token=${this.token}&sort=oldestfirst&afterTimestamp=`+searchBeginTime+`&offset=${offset}&v=20150404&m=swarm&limit=250`
 	    xhr.open("GET", url);
 	    xhr.send(null);
@@ -35,7 +35,7 @@ class FSApiController{
 	    		console.log(`fetching from ${newOffset}`);
 	    		// console.log(newOffset);
 	    		// I don't want to have to make a bunch of calls during development. Uncomment next line, and remove following when done debugging
-	    		this._fetchNext250(newOffset, resolve, reject);
+	    		this._fetchNext250(newOffset, searchBeginTime, resolve, reject);
 	    		// resolve();
 	    	} else {
 	    		window.localStorage.setItem(this.LAST_CHECKIN_KEY, this.history[this.history.length -1 ].createdAt);
@@ -50,7 +50,6 @@ class FSApiController{
 		var lastCheckinDate = window.localStorage.getItem(this.LAST_CHECKIN_KEY) || 1;
 
 	    const promise = new Promise((resolve, reject)=>{
-	    	console.log(lastCheckinDate);
 	    	this._fetchNext250(offset, lastCheckinDate, resolve, reject);
 	    	// xhr.onload = (res) => {
 		    // 	this.history = JSON.parse(xhr.responseText).response.checkins.items;
