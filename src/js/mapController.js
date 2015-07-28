@@ -16,6 +16,7 @@ class fourStoryMap{
 	updateMarkers(checkins){
 		//Only gets passed in on the first call
 		if(checkins){
+			console.log(`this ${this}`);
 			this.checkins = checkins;
 		}
 
@@ -29,11 +30,4 @@ class fourStoryMap{
 			}
 		});
 	}
-	
-	//Not sure I need to worry about amount of markers on the map. Will test for performance when I have more data.
-	// bindMapRedraw(){
-	// 	this.map.on('moveend', ()=>{
-	// 		this.updateMarkers();
-	// 	});
-	// }
 }

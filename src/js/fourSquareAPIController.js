@@ -65,7 +65,7 @@ class FSApiController{
 	}
 
 
-	openDatabase(){
+	openDatabase(callback){
 		var db;
 		var request = indexedDB.open("FourStoryDB");
 		request.onerror = function(event) {
@@ -74,19 +74,23 @@ class FSApiController{
 		  alert("Database error: " + event.target.errorCode);
 		};
 
-		request.onsuccess = function(event) {
+		request.onsuccess = (event) => {
 			console.log("db successfully opened");
-			this.db = event.target.result;
+			db = event.target.result;
 			//Ok the DB is opened and data is added to it (because this gets called after onupgradeneeded is successful)
 			//So let's try and pull checkins in a fixed time range out of the IndexedDB.
 			var dateRange = IDBKeyRange.bound(1428525636, 1428705636, true, true);
-			var objectStore = this.db.transaction("checkins").objectStore("checkins");
+			var objectStore = db.transaction("checkins").objectStore("checkins");
 			var index = objectStore.index("createdAt");
+			this.history = [];
 			index.openCursor(dateRange, "prev").onsuccess = (event) => {
 				var cursor = event.target.result;
 				if (cursor) {
-				console.log(cursor.value.venue.name);
-				cursor.continue();
+					this.history.push(cursor.value);
+					cursor.continue();
+				} else {
+					console.log(this.history);
+					callback(this.history);
 				}
 			}
 			//This works, so some things next up: Fetch all of the user's data, bind the date range searching to a UI element
@@ -104,14 +108,16 @@ class FSApiController{
 			this.db = event.target.result;
 			var objectStore = this.db.createObjectStore("checkins", { keyPath: "id" });
 			objectStore.createIndex("createdAt", "createdAt", { unique: false });
-			// objectStore.createIndex("latitude", "venue.location.lat", { unique: false });
-			// objectStore.createIndex("longitude", "venue.location.lng", { unique: false });
+			objectStore.createIndex("latitude", "venue.location.lat", { unique: false });
+			objectStore.createIndex("longitude", "venue.location.lng", { unique: false });
 			objectStore.transaction.oncomplete = (event) => {
 			    // Store values in the newly created objectStore.
 			    var checkinObjectStore = this.db.transaction("checkins", "readwrite").objectStore("checkins");
 			    for (var i in this.history) {
-			      checkinObjectStore.add(this.history[i]);
-			    	console.log("write transaction");
+			        if(this.history[i].venue){
+					    checkinObjectStore.add(this.history[i]);
+				    	console.log("write transaction");
+				    }
 			    }
 			};
 		}
@@ -121,9 +127,4 @@ class FSApiController{
 		// this.db.
 	}
 
-	getNewestCheckins(){
-		//Look at latest checkin
-		//Fetch next 250 checkins (max allowed at once by API)
-		//If there are more, recurse
-	}
 }
