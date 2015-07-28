@@ -79,9 +79,11 @@ class FSApiController{
 			db = event.target.result;
 			//Ok the DB is opened and data is added to it (because this gets called after onupgradeneeded is successful)
 			//So let's try and pull checkins in a fixed time range out of the IndexedDB.
-			var dateRange = IDBKeyRange.bound(1428525636, 1428705636, true, true);
+			// var dateRange = IDBKeyRange.bound(1428525636, 1428705636, true, true);
+			var dateRange = IDBKeyRange.bound(44, 45, true, true);
 			var objectStore = db.transaction("checkins").objectStore("checkins");
-			var index = objectStore.index("createdAt");
+			// var index = objectStore.index("createdAt");
+			var index = objectStore.index("latitude");
 			this.history = [];
 			index.openCursor(dateRange, "prev").onsuccess = (event) => {
 				var cursor = event.target.result;

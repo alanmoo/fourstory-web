@@ -16,11 +16,10 @@ class fourStoryMap{
 	updateMarkers(checkins){
 		//Only gets passed in on the first call
 		if(checkins){
-			console.log(`this ${this}`);
 			this.checkins = checkins;
 		}
 
-		this.checkins.forEach((checkin)=>{
+		checkins.forEach((checkin)=>{
 			if(checkin.venue){
 			const checkincoords = [checkin.venue.location.lat, checkin.venue.location.lng];
 			//Not sure I need to worry about amount of markers on the map. Will test for performance when I have more data.
