@@ -21,6 +21,8 @@ gulp.task('sass', function() {
 });
 
 gulp.task('babel', function(){
+	gulp.src('src/vendor/**/*')
+	.pipe(gulp.dest('dist/vendor'));
 	return gulp.src('src/js/*.js')
 	.pipe(watch('src/js/*.js'))
 	.pipe(babel())
