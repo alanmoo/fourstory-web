@@ -1,5 +1,6 @@
 class FSApiController{
 	constructor(){
+		this.LAST_CHECKIN_KEY = 'LAST_CHECKIN_DATE';
 		this.api = "https://api.foursquare.com/v2/";
 		this.version = 20150404;
 		this.mode = "swarm";
@@ -17,7 +18,7 @@ class FSApiController{
 		document.body.appendChild(this.status);
 	}
 
-	_fetchNext250(offset, resolve, reject){
+	_fetchNext250(offset, lastCheckinDate, resolve, reject) {
 		const xhr = new XMLHttpRequest();
 		const url = `https://api.foursquare.com/v2/users/self/checkins?oauth_token=${this.token}&sort=oldestfirst&offset=${offset}&v=20150404&m=swarm&limit=250`
 	    xhr.open("GET", url);
@@ -34,7 +35,8 @@ class FSApiController{
 	    		// I don't want to have to make a bunch of calls during development. Uncomment next line, and remove following when done debugging
 	    		this._fetchNext250(newOffset, resolve, reject);
 	    		// resolve();
-	    	} else{
+	    	} else {
+	    		window.localStorage.setItem(this.LAST_CHECKIN_KEY, this.history[this.history.length -1 ].createdAt);
 		    	const statusText = document.createTextNode("fetched history");
 		    	this.status.appendChild(statusText);
 	    		resolve();
@@ -44,9 +46,11 @@ class FSApiController{
 
 	getCheckinHistory(offset = 0){
 
+		var lastCheckinDate = window.localStorage.getItem(this.LAST_CHECKIN_KEY);
+
 	    const promise = new Promise((resolve, reject)=>{
-	    	
-	    	this._fetchNext250(offset, resolve, reject);
+
+	    	this._fetchNext250(offset, lastCheckinDate, resolve, reject);
 	    	// xhr.onload = (res) => {
 		    // 	this.history = JSON.parse(xhr.responseText).response.checkins.items;
 		    // 	console.log(this.history[0]);
