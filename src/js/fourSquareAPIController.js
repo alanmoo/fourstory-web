@@ -18,9 +18,11 @@ class FSApiController{
 		document.body.appendChild(this.status);
 	}
 
-	_fetchNext250(offset, lastCheckinDate, resolve, reject) {
+	_fetchNext250(offset, searchBeginTime, resolve, reject){
 		const xhr = new XMLHttpRequest();
-		const url = `https://api.foursquare.com/v2/users/self/checkins?oauth_token=${this.token}&sort=oldestfirst&offset=${offset}&v=20150404&m=swarm&limit=250`
+		console.log(`searchBegin: ${searchBeginTime}`);
+		console.log(searchBeginTime.constructor);
+		const url = `https://api.foursquare.com/v2/users/self/checkins?oauth_token=${this.token}&sort=oldestfirst&afterTimestamp=`+searchBeginTime+`&offset=${offset}&v=20150404&m=swarm&limit=250`
 	    xhr.open("GET", url);
 	    xhr.send(null);
 
@@ -43,13 +45,12 @@ class FSApiController{
 	    	}
     	}
     }
-
 	getCheckinHistory(offset = 0){
 
-		var lastCheckinDate = window.localStorage.getItem(this.LAST_CHECKIN_KEY);
+		var lastCheckinDate = window.localStorage.getItem(this.LAST_CHECKIN_KEY) || 1;
 
 	    const promise = new Promise((resolve, reject)=>{
-
+	    	console.log(lastCheckinDate);
 	    	this._fetchNext250(offset, lastCheckinDate, resolve, reject);
 	    	// xhr.onload = (res) => {
 		    // 	this.history = JSON.parse(xhr.responseText).response.checkins.items;
