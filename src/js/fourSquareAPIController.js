@@ -4,6 +4,7 @@ class FSApiController{
 		this.version = 20150404;
 		this.mode = "swarm";
 		this.token = document.location.hash.split('=')[1];
+		this.history = [];
 
 		this.status = document.createElement("div");
 		let statusText;
@@ -16,23 +17,49 @@ class FSApiController{
 		document.body.appendChild(this.status);
 	}
 
-	getCheckinHistory(){
+	_fetchNext250(offset, resolve, reject){
 		const xhr = new XMLHttpRequest();
-		const url = `https://api.foursquare.com/v2/users/self/checkins?oauth_token=${this.token}&v=20150404&m=swarm&limit=250`
+		const url = `https://api.foursquare.com/v2/users/self/checkins?oauth_token=${this.token}&sort=oldestfirst&offset=${offset}&v=20150404&m=swarm&limit=250`
 	    xhr.open("GET", url);
 	    xhr.send(null);
-	    const promise = new Promise((resolve, reject)=>{
-	    	xhr.onload = (res) =>{
-		    	this.history = JSON.parse(xhr.responseText).response.checkins.items;
-		    	console.log(this.history[0]);
+
+		xhr.onload = (res) =>{
+    		//Destructure to create an array of objects instead of an array of arrays
+	    	this.history.push(...JSON.parse(xhr.responseText).response.checkins.items);
+    		// console.log(JSON.parse(xhr.responseText).response.checkins.items);
+	    	if(JSON.parse(xhr.responseText).response.checkins.items.length === 250){
+	    		var newOffset = offset+250;
+	    		console.log(`fetching from ${newOffset}`);
+	    		// console.log(newOffset);
+	    		// I don't want to have to make a bunch of calls during development. Uncomment next line, and remove following when done debugging
+	    		this._fetchNext250(newOffset, resolve, reject);
+	    		// resolve();
+	    	} else{
 		    	const statusText = document.createTextNode("fetched history");
 		    	this.status.appendChild(statusText);
-		    	resolve();
+	    		resolve();
 	    	}
+    	}
+    }
+
+	getCheckinHistory(offset = 0){
+
+	    const promise = new Promise((resolve, reject)=>{
+	    	
+	    	this._fetchNext250(offset, resolve, reject);
+	    	// xhr.onload = (res) => {
+		    // 	this.history = JSON.parse(xhr.responseText).response.checkins.items;
+		    // 	console.log(this.history[0]);
+		    // 	const statusText = document.createTextNode("fetched history");
+		    // 	this.status.appendChild(statusText);
+		    // 	resolve();
+	    	// }
+
 	    });
 
 	    return promise;
 	}
+
 
 	openDatabase(){
 		var db;
@@ -51,7 +78,7 @@ class FSApiController{
 			var dateRange = IDBKeyRange.bound(1428525636, 1428705636, true, true);
 			var objectStore = this.db.transaction("checkins").objectStore("checkins");
 			var index = objectStore.index("createdAt");
-			index.openCursor(dateRange, "prev").onsuccess = (event) =>{
+			index.openCursor(dateRange, "prev").onsuccess = (event) => {
 				var cursor = event.target.result;
 				if (cursor) {
 				console.log(cursor.value.venue.name);
