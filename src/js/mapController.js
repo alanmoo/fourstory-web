@@ -1,4 +1,6 @@
-class fourStoryMap{
+require('../bower_components/leaflet/dist/leaflet.js');
+
+export class fourStoryMap{
 	constructor(elementId){
 		this.map = L.map(elementId);
 		this.customTilesUrl = 'http://{s}.tiles.mapbox.com/v4/alanmoo.ll4kikll/{z}/{x}/{y}@2x.png?access_token=pk.eyJ1IjoiYWxhbm1vbyIsImEiOiIzN0pFVDVZIn0.MUpIBwrMiV7QB2H8OtDUvQ';

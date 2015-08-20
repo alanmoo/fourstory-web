@@ -1,0 +1,24 @@
+{
+  "name": "fourstory-web",
+  "version": "0.0.0",
+  "authors": [
+    "Alan Mooiman <alan@alanmooiman.com>"
+  ],
+  "description": "Track your foursquare/swarm checkin history",
+  "main": "dist/index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "mocha": "~2.2.5",
+    "jquery": "~2.1.4"
+  },
+  "dependencies": {
+    "leaflet": "~0.7.3"
+  }
+}

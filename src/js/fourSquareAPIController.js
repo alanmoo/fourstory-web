@@ -1,4 +1,4 @@
-class FSApiController{
+export class FSApiController{
 	constructor(){
 		this.LAST_CHECKIN_KEY = 'LAST_CHECKIN_DATE';
 		this.api = "https://api.foursquare.com/v2/";
@@ -126,7 +126,7 @@ class FSApiController{
 	}
 
 	getCheckinsInRange(startDate, endDate){
-		// this.db.
+
 	}
 
 }
