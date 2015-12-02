@@ -1,4 +1,6 @@
 require('../../node_modules/es6-promise').polyfill();
+require('../../node_modules/leaflet/dist/leaflet.css');
+require('../css/fourStory.css');
 
 var FSApiController = require('./fourSquareApiController.js');
 var fourStoryMap = require('./mapController.js');

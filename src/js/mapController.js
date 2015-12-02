@@ -1,9 +1,10 @@
-require('../bower_components/leaflet/dist/leaflet.js');
+var L = require('leaflet');
 
 export class fourStoryMap{
 	constructor(elementId){
+		L.Icon.Default.imagePath = 'http://{s}.tiles.mapbox.com/v4/alanmoo.ll4kikll/{z}/{x}/{y}@2x.png?access_token=pk.eyJ1IjoiYWxhbm1vbyIsImEiOiIzN0pFVDVZIn0.MUpIBwrMiV7QB2H8OtDUvQ';
+		this.customTilesUrl = L.Icon.Default.imagePath;
 		this.map = L.map(elementId);
-		this.customTilesUrl = 'http://{s}.tiles.mapbox.com/v4/alanmoo.ll4kikll/{z}/{x}/{y}@2x.png?access_token=pk.eyJ1IjoiYWxhbm1vbyIsImEiOiIzN0pFVDVZIn0.MUpIBwrMiV7QB2H8OtDUvQ';
 		this.initPromise = new Promise((resolve, reject)=>{
 			//TODO: Initalize to fixed location after X seconds/getCurrentPosition failure, or maybe location of last checkin
 			navigator.geolocation.getCurrentPosition((loc)=>{
